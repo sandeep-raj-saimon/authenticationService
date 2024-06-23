@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    "base.apps.BaseConfig"
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ WSGI_APPLICATION = "authenticationService.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecommmerce_user",
+        "NAME": "ecommerceuser",
         "USER": "sandeep",
         "PASSWORD": "Sandeep@1997",
         "HOST": "localhost",

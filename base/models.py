@@ -3,17 +3,19 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, phone, password=None, **extra_fields):
-        if not(email and phone):
-            raise ValueError('Email or Phone must be provided')
+    def create_user(self, email, phone_number, password=None, **extra_fields):
+        if not(email and phone_number):
+            raise ValueError('Email or Phone Number must be provided')
+        if not password:
+            raise ValueError('Password must be provided')
         email = self.normalize_email(email)
-        user = self.model(username=username.strip(), email=email, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     
-    def create_superuser(self, username, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -22,7 +24,7 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(username, email, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
@@ -33,8 +35,9 @@ class User(AbstractUser):
     username = None
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
     phone_number = models.CharField(max_length=180, unique=True)
-    USERNAME_FIELD = ["phone"]
+    USERNAME_FIELD = "phone_number"
 
+    objects = UserManager()
     def is_admin(self):
         return self.user_type == 'ADMIN'
 
