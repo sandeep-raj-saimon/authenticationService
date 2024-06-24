@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, phone_number, password=None, **extra_fields):
-        if not(email and phone_number):
+    def create_user(self, email=None, phone_number=None, password=None, **extra_fields):
+        if email is None and phone_number is None:
             raise ValueError('Email or Phone Number must be provided')
         if not password:
             raise ValueError('Password must be provided')
@@ -34,7 +34,7 @@ class User(AbstractUser):
     )
     username = None
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
-    phone_number = models.CharField(max_length=180, unique=True)
+    phone_number = models.CharField(max_length=180, unique=True, null=True)
     USERNAME_FIELD = "phone_number"
 
     objects = UserManager()

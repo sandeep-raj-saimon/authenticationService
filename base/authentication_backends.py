@@ -1,6 +1,6 @@
 from .models import *
 from django.contrib.auth.backends import BaseBackend
-def authenticate(request, email, phone_number, password=None):
+def authenticate(request, email=None, phone_number=None, password=None):
     if (email):
         user = User.objects.get(email=email)
 
@@ -11,7 +11,7 @@ def authenticate(request, email, phone_number, password=None):
     return None
 
 class AuthBackend(BaseBackend):
-    def authenticate(self, request, email, phone_number, password, **kwargs):
+    def authenticate(self, request, password, email=None, phone_number=None, **kwargs):
         if (phone_number is None and email is None):
             raise ValueError('Email or Phone Number must be provided')
         return authenticate(request, email, phone_number, password)
